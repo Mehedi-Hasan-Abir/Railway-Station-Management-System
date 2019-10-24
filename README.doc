@@ -1,0 +1,94 @@
+# Railway-Station-Management-System
+Introduction: 
+Our project is on railway station management. We will have different stations as sites and the railway administration as the server. Passengers will be able to buy tickets at two sites: Dhaka and Sylhet. They will be able to book or cancel tickets of their desired trains. Server will keep tabs on tickets sold and the different trains that go from different source to destination. They can add new train to the railway.
+Objective:
+The main objective of the railway station management System is to manage the details of Train, Passengers, related Tickets and Bookings. The purpose of the project is to build an application program to reduce the manual work. 
+So, in brief, the goal of this system is to achieve efficient and easy performance of railway station management whose database is distributed in different sites.
+Site distribution:
+The database of the railway station is distributed in two sites:
+Dhaka
+Sylhet
+Global Schema:
+The global schema for the database is:
+Train(tid, tname, source, destination, seats)
+Station(stid, stname)
+Passenger(pid, pname, gender, age, city)
+Ticket(ticketid, tid, status, class, source, dest, fare, departure_time, count)
+Booking(bid, pid, ticketid, seat_no, seat_type, booking_status, stationid)
+Booking_Delete_Log(bid, pid, ticketid, seat_no, seat_type, booking_status, stationid)
+
+Fragmentation Schema:
+Booking table is divided into 2 fragments: Booking1 and Booking2
+Booking1 = Select * from Booking where location=’Dhaka’
+Booking2 = Select * from Booking where location=’Sylhet’
+
+Allocation Schema:
+Booking1: at site 1
+Booking2: at site 2
+
+Application Control:
+Site:
+Users will be able to buy tickets at specific sites. They will also be able to book or cancel tickets of their desired trains. Available application for users are
+Detail of a particular Train.
+Availability of the seat.
+The route and destinations of a particular train.
+Book desired ticket.
+Cancel Ticket 
+Server:
+Railway Server will keep track on tickets sold and different trains that go from different source to destination. Some of these works are
+Adding new train to the railway.
+Check which passengers are in a particular train 
+Checking total number of sold tickets
+Checking total sale price of tickets
+
+Functions and Procedures:
+Server:
+Functions:
+Add_Train: This function adds a new train to the train table. Administrators will be able to add new train from server location.
+GetTicketsSold: This function returns the number of tickets sold in total. It considers data from both locations. 
+GetTotalPrice: This function returns the total price of all ticket sold. Basically it returns the total income from ticket sales from all locations. 
+    
+Procedures:
+    FindPassengers: This function returns the total number of passengers of any given train.
+
+Site: 
+Functions:
+Book_Ticket: This function will add a row to the booking table confirming a ticket booking. Booking can only be made if tickets are available.
+Cancel_Ticket: This function allows a user to cancel a booked ticket. 
+
+Procedures:
+Add_Passenger: This procedure adds a passenger to the passenger table
+Find_Train: This procedure finds trains that go to desired destination
+Find_Ticket: This procedure looks for desired tickets that are available. User will give his destination, number of tickets needed and all available tickets will be shown.
+FindCheaptestTrains: This procedure finds the trains that go to desired destination while taking the cheapest ticket fares. 
+Triggers
+The following triggers have been used in our project which perform useful operations such as automatic update of ticket count.
+ChangeTicketCount:
+This trigger is responsible for automatically updating the ticket count in the ticket table whenever a booking is made or cancelled.
+It will increment the ticket count when a booking is made (row inserted to booking table).
+It will decrement the ticket count when a booking is cancelled ( row updated in booking table).
+
+BidAutoIncrement, PidAutoIncrement, TidAutoincrement:
+These triggers are used to auto increment the primary key of the respective tables before insertion of a new row. Incremented primary key is used as primary key for new row.
+
+
+TrainTrigger:
+This trigger gives a message whenever a new train is added to the railway network.
+ 
+PassengerTrigger:
+This trigger gives a message whenever a new passenger is registered to the railway network.
+
+Log_delete_Trigger:
+This trigger inserts the cancelled booking records in a log table before they are deleted from booking table.
+Views
+ViewBooking: This view shows the combined total bookings made at both sites. It selects all data from booking table of current location and performs union operation with the booking table of another site. 
+  
+Exceptions
+Exceptions are used to handle unexpected errors in pl-sql code. We used the following exceptions in our project:
+NoPassengerFound: This exception is raised when ticket is attempted to be booked by a passenger whose passenger id is not in the passenger table.
+NoDataFound: This system exception is raised in situations where data is missing.
+
+Packages
+Global Package: In global package the function and procedures relevant to server is kept.
+Local Package: In local package the function and procedures relevant to 
+site is kept 
